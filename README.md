@@ -14,6 +14,7 @@ The theme across these repos: build the thing, then build something independent 
 | **[lenet5-asic-accelerator](https://github.com/3more102/lenet5-asic-accelerator)** — LeNet-5 int8 inference datapath | Bit-exact Python oracle, real sky130hd PPA |
 | **[Coherex](https://github.com/3more102/Coherex)** — 4-core MESI cache coherence | Exhaustive protocol model checking, RTL, a sequential-consistency oracle, and mutation-qualified checkers |
 | **[mutanthunt-i2c](https://github.com/3more102/mutanthunt-i2c)** — I2C master + DV environment | 38 injected RTL defects, 36 killed — both survivors proved, not excused |
+| **[axi-interconnect-verif](https://github.com/3more102/axi-interconnect-verif)** — AXI4 / AXI4-Lite 2×2 crossbar | 27/27 regression, 14/14 mutation defects killed, unbounded formal proofs on both interconnects |
 | **[mnist-nn-scratch](https://github.com/3more102/mnist-nn-scratch)** — neural net from raw NumPy | 99.39% on MNIST (99.55% with test-time augmentation), hand-written backprop/conv/batchnorm, no autograd |
 
-Currently: closing `cascade-soc` through place-and-route to a real GDSII.
+Currently: closing `cascade-soc` through place-and-route to a real GDSII, and taking `keccak-tile` from a validated golden model toward RTL and a real Tiny Tapeout submission.
