@@ -70,42 +70,11 @@ assert property (p_justified_confidence)
 
 ## ⚡ Engineering Architecture
 
-```mermaid
-flowchart TB
-    subgraph ENV["INDEPENDENT VERIFICATION & SIGN-OFF INFRASTRUCTURE (Co-Sim • Formal • Mutation • Gate / FPGA / SKY130HD)"]
-        direction LR
-        subgraph SOC["Processor & SoC"]
-            P1["<b>Cascade SoC</b><br/>RV32 + INT8 Accel<br/>4x Verif • DFT • SKY130HD"]
-            P2["<b>Cascade RV32I</b><br/>5-Stage RV32IM<br/>Commit-Log • FPGA Boot"]
-        end
-        subgraph BUS["Coherence & Interconnect"]
-            C1["<b>Coherex</b><br/>4-Core MESI<br/>Model Check • SC Oracle"]
-            C2["<b>AXI Interconnect</b><br/>AXI4 / AXI4-Lite 2x2<br/>27/27 • 14/14 • Unbounded"]
-        end
-        subgraph ACC["Hardware Accelerators"]
-            A1["<b>Systolic Tile</b><br/>8x8 INT8 • 64 MACs/cycle<br/>Cyclone V & Zynq-7010"]
-            A2["<b>LeNet-5 ASIC</b><br/>INT8 CNN Datapath<br/>Python Oracle • SKY130HD PPA"]
-        end
-        subgraph ML["Protocol & First-Principles ML"]
-            M1["<b>MutantHunt I2C</b><br/>I2C Master RTL<br/>36/38 Mutants Killed"]
-            M2["<b>MNIST from Scratch</b><br/>Pure NumPy (No Autograd)<br/>99.39% / 99.55% TTA"]
-        end
-    end
+<div align="center">
+  <img src="https://mermaid.ink/svg/Zmxvd2NoYXJ0IExSCiAgICBzdWJncmFwaCBFTlZbIklOREVQRU5ERU5UIFZFUklGSUNBVElPTiBBTkQgU0lHTi1PRkYgSU5GUkFTVFJVQ1RVUkUiXQogICAgICAgIHN1YmdyYXBoIFNPQ1siUHJvY2Vzc29yIGFuZCBTb0MiXQogICAgICAgICAgICBkaXJlY3Rpb24gVEIKICAgICAgICAgICAgUDFbIkNhc2NhZGUgU29DPGJyLz5SVjMyICsgSU5UOCBBY2NlbDxici8-NHggVmVyaWYgfCBERlQgfCBTS1kxMzBIRCJdCiAgICAgICAgICAgIFAyWyJDYXNjYWRlIFJWMzJJPGJyLz41LVN0YWdlIFJWMzJJTTxici8-Q29tbWl0LUxvZyB8IEZQR0EgQm9vdCJdCiAgICAgICAgZW5kCiAgICAgICAgc3ViZ3JhcGggQlVTWyJDb2hlcmVuY2UgYW5kIEJ1cyJdCiAgICAgICAgICAgIGRpcmVjdGlvbiBUQgogICAgICAgICAgICBDMVsiQ29oZXJleDxici8-NC1Db3JlIE1FU0k8YnIvPk1vZGVsIENoZWNrIHwgU0MgT3JhY2xlIl0KICAgICAgICAgICAgQzJbIkFYSSBJbnRlcmNvbm5lY3Q8YnIvPkFYSTQgLyBBWEk0LUxpdGUgMngyPGJyLz4yNy8yNyB8IDE0LzE0IHwgVW5ib3VuZGVkIl0KICAgICAgICBlbmQKICAgICAgICBzdWJncmFwaCBBQ0NbIkFjY2VsZXJhdG9ycyJdCiAgICAgICAgICAgIGRpcmVjdGlvbiBUQgogICAgICAgICAgICBBMVsiU3lzdG9saWMgVGlsZTxici8-OHg4IElOVDggfCA2NCBNQUNzL2N5Yzxici8-Q3ljbG9uZSBWICsgWnlucS03MDEwIl0KICAgICAgICAgICAgQTJbIkxlTmV0LTUgQVNJQzxici8-SU5UOCBDTk4gRGF0YXBhdGg8YnIvPlB5dGhvbiBPcmFjbGUgfCBTS1kxMzBIRCJdCiAgICAgICAgZW5kCiAgICAgICAgc3ViZ3JhcGggTUxbIlByb3RvY29sIGFuZCBNTCJdCiAgICAgICAgICAgIGRpcmVjdGlvbiBUQgogICAgICAgICAgICBNMVsiTXV0YW50SHVudCBJMkM8YnIvPkkyQyBNYXN0ZXIgUlRMPGJyLz4zNi8zOCBNdXRhbnRzIEtpbGxlZCJdCiAgICAgICAgICAgIE0yWyJNTklTVCBTY3JhdGNoPGJyLz5QdXJlIE51bVB5IC0gTm8gQXV0b2dyYWQ8YnIvPjk5LjM5JSAvIDk5LjU1JSBUVEEiXQogICAgICAgIGVuZAogICAgZW5kCgogICAgc3R5bGUgRU5WIGZpbGw6IzBiMTIyMixzdHJva2U6IzM4YmRmOCxzdHJva2Utd2lkdGg6MnB4LGNvbG9yOiNmOGZhZmMKICAgIHN0eWxlIFNPQyBmaWxsOiMwZjE3MmEsc3Ryb2tlOiMzOGJkZjgsc3Ryb2tlLXdpZHRoOjEuNXB4LGNvbG9yOiMzOGJkZjgKICAgIHN0eWxlIEJVUyBmaWxsOiMwZjE3MmEsc3Ryb2tlOiMzNGQzOTksc3Ryb2tlLXdpZHRoOjEuNXB4LGNvbG9yOiMzNGQzOTkKICAgIHN0eWxlIEFDQyBmaWxsOiMwZjE3MmEsc3Ryb2tlOiNmYmJmMjQsc3Ryb2tlLXdpZHRoOjEuNXB4LGNvbG9yOiNmYmJmMjQKICAgIHN0eWxlIE1MIGZpbGw6IzBmMTcyYSxzdHJva2U6I2MwODRmYyxzdHJva2Utd2lkdGg6MS41cHgsY29sb3I6I2MwODRmYwogICAgc3R5bGUgUDEgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgUDIgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgQzEgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgQzIgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgQTEgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgQTIgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTEgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTIgZmlsbDojMDcwYzE3LHN0cm9rZTojMzM0MTU1LHN0cm9rZS13aWR0aDoxcHgsY29sb3I6I2Y4ZmFmYwo=?theme=dark&bgColor=0B1222" width="100%" alt="System and Verification Architecture Flowchart"/>
+</div>
 
-    style ENV fill:#0b1222,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc
-    style SOC fill:#0f172a,stroke:#38bdf8,stroke-width:1px,color:#38bdf8
-    style BUS fill:#0f172a,stroke:#34d399,stroke-width:1px,color:#34d399
-    style ACC fill:#0f172a,stroke:#fbbf24,stroke-width:1px,color:#fbbf24
-    style ML fill:#0f172a,stroke:#c084fc,stroke-width:1px,color:#c084fc
-    style P1 fill:#070c17,stroke:#334155,color:#f8fafc
-    style P2 fill:#070c17,stroke:#334155,color:#f8fafc
-    style C1 fill:#070c17,stroke:#334155,color:#f8fafc
-    style C2 fill:#070c17,stroke:#334155,color:#f8fafc
-    style A1 fill:#070c17,stroke:#334155,color:#f8fafc
-    style A2 fill:#070c17,stroke:#334155,color:#f8fafc
-    style M1 fill:#070c17,stroke:#334155,color:#f8fafc
-    style M2 fill:#070c17,stroke:#334155,color:#f8fafc
-```
+<br/>
 
 <details>
 <summary><b>🔍 Expand Technical Focus Matrix (7 Core Engineering Domains)</b></summary>
@@ -327,19 +296,11 @@ Neural-network implementation using NumPy without automatic differentiation, bui
 
 I treat verification as an engineering discipline with measurable outcomes, not simply a final stage of development. **The objective is not to maximize the number of passing tests. It is to maximize justified confidence in the design.**
 
-```mermaid
-flowchart LR
-    M1["<b>01. Independent Models</b><br/>Separate SW / ISA Oracle"] --> M2["<b>02. Formal Reasoning</b><br/>Exhaustive Model Checking"]
-    M2 --> M3["<b>03. Mutation Testing</b><br/>Challenge the Testbench"]
-    M3 --> M4["<b>04. Cross-Level Sign-Off</b><br/>RTL → Synth → Gate → FPGA"]
-    M4 --> M5["<b>05. Measured Evidence</b><br/>Proofs, PPA & Known Limits"]
+<div align="center">
+  <img src="https://mermaid.ink/svg/Zmxvd2NoYXJ0IExSCiAgICBNMVsiMDEuIEluZGVwZW5kZW50IE1vZGVsczxici8-U2VwYXJhdGUgU1cgLyBJU0EgT3JhY2xlIl0gLS0-IE0yWyIwMi4gRm9ybWFsIFJlYXNvbmluZzxici8-RXhoYXVzdGl2ZSBNb2RlbCBDaGVja2luZyJdCiAgICBNMiAtLT4gTTNbIjAzLiBNdXRhdGlvbiBUZXN0aW5nPGJyLz5DaGFsbGVuZ2UgdGhlIFRlc3RiZW5jaCJdCiAgICBNMyAtLT4gTTRbIjA0LiBDcm9zcy1MZXZlbCBTaWduLU9mZjxici8-UlRMIHRvIFN5bnRoIHRvIEdhdGUgdG8gRlBHQSJdCiAgICBNNCAtLT4gTTVbIjA1LiBNZWFzdXJlZCBFdmlkZW5jZTxici8-UHJvb2ZzLCBQUEEgYW5kIEtub3duIExpbWl0cyJdCgogICAgc3R5bGUgTTEgZmlsbDojMGYxNzJhLHN0cm9rZTojMzhiZGY4LHN0cm9rZS13aWR0aDoycHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTIgZmlsbDojMGYxNzJhLHN0cm9rZTojMzRkMzk5LHN0cm9rZS13aWR0aDoycHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTMgZmlsbDojMGYxNzJhLHN0cm9rZTojYzA4NGZjLHN0cm9rZS13aWR0aDoycHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTQgZmlsbDojMGYxNzJhLHN0cm9rZTojZmJiZjI0LHN0cm9rZS13aWR0aDoycHgsY29sb3I6I2Y4ZmFmYwogICAgc3R5bGUgTTUgZmlsbDojMGYxNzJhLHN0cm9rZTojMzhiZGY4LHN0cm9rZS13aWR0aDoycHgsY29sb3I6I2Y4ZmFmYwo=?theme=dark&bgColor=0B1222" width="100%" alt="Five-Stage Verification Methodology Flowchart"/>
+</div>
 
-    style M1 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc
-    style M2 fill:#0f172a,stroke:#34d399,stroke-width:1.5px,color:#f8fafc
-    style M3 fill:#0f172a,stroke:#c084fc,stroke-width:1.5px,color:#f8fafc
-    style M4 fill:#0f172a,stroke:#fbbf24,stroke-width:1.5px,color:#f8fafc
-    style M5 fill:#0f172a,stroke:#38bdf8,stroke-width:1.5px,color:#f8fafc
-```
+<br/>
 
 - **01 — Independent Reference Models:** Compare DUT behavior against separate software or architectural models to avoid relying exclusively on implementation-derived expectations.
 - **02 — Formal Reasoning:** Use formal properties and exhaustive model checking where applicable to investigate behavior beyond directed simulation scenarios.
